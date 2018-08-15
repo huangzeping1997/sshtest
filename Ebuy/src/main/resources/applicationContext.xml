@@ -60,7 +60,7 @@
         <property name="hibernateProperties">
             <props>
                 <!-- 设置Mysql方言-->
-                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop>
                 <!-- 设置数据库sql语句自动提交 -->
                 <prop key="hibernate.connection.autocommit">true</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>

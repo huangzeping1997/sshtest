@@ -1,5 +1,6 @@
 package com.java1234.entity;
 
+
 public class PageBean {
 
     private int page;//第几页

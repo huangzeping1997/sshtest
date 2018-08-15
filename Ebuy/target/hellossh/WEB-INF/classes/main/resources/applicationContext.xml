@@ -1,0 +1,122 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <!-- 解析property文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
+        <property name="location" value="classpath:jdbc.properties"/>
+    </bean>
+
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${dataSource.driverClass}"/>
+        <property name="jdbcUrl" value="${dataSource.jdbcUrl}"/>
+        <property name="user" value="${dataSource.user}"/>
+        <property name="password" value="${dataSource.password}"/>
+
+        <!-- 设置数据连接池的最大连接数 -->
+        <property name="maxPoolSize">
+            <value>50</value>
+        </property>
+
+        <!-- 设置数据连接池的最小连接数 -->
+        <property name="minPoolSize">
+            <value>5</value>
+        </property>
+
+        <!-- 配置数据库连接池的初始化连接数 -->
+        <property name="initialPoolSize">
+            <value>5</value>
+        </property>
+
+        <!-- 设置数据库连接池最大空闲时间 -->
+        <property name="maxIdleTime">
+            <value>20</value>
+        </property>
+
+        <!-- 当连接池里面的连接用完的时候c3p0一下获取新的连接数 -->
+        <property name="acquireIncrement">
+            <value>20</value>
+        </property>
+    </bean>
+
+    <!-- hibernate管理 -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource">
+            <ref bean="dataSource"></ref>
+        </property>
+
+        <!-- 一些hibernate配置-->
+        <property name="hibernateProperties">
+            <props>
+                <!-- 设置Mysql方言-->
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop>
+                <!-- 设置数据库sql语句自动提交 -->
+                <prop key="hibernate.connection.autocommit">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <!-- 显示,格式化sql -->
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="format_sql">true</prop>
+
+                <!-- 解决session关闭问题 -->
+                <prop key="hibernate.max_fetch_depth">3</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/test</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+            </props>
+        </property>
+
+        <!-- 包扫描方式加载注解类 -->
+        <property name="packagesToScan">
+            <list>
+                <value>com.java1234.entity</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <!-- 配置事务通知属性 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!-- 定义事务传播属性 -->
+        <tx:attributes>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="edit*" propagation="REQUIRED" />
+            <tx:method name="save*" propagation="REQUIRED" />
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="new*" propagation="REQUIRED" />
+            <tx:method name="set*" propagation="REQUIRED" />
+            <tx:method name="remove*" propagation="REQUIRED" />
+            <tx:method name="delete*" propagation="REQUIRED" />
+            <tx:method name="change*" propagation="REQUIRED" />
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="load*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="*" propagation="REQUIRED" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置事务切面 -->
+    <aop:config>
+        <aop:pointcut id="serviceOperation" expression="execution(* com.java1234.service.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation"></aop:advisor>
+    </aop:config>
+    
+    <!-- 自动加载构建bean -->
+    <context:component-scan base-package="com.java1234"/>
+
+
+</beans>
