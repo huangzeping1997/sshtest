@@ -6,8 +6,8 @@ import sun.security.util.Length;
 import javax.persistence.*;
 import java.util.Date;
 
-@Table
-@Entity(name = "t_news")
+@Entity
+@Table(name = "t_news")
 public class News {
 
     private int id;

@@ -4,8 +4,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
-@Table
-@Entity(name = "t_orderProduct")
+@Entity
+@Table(name = "t_orderproduct")
 public class OrderProduct {
 
     private int id;

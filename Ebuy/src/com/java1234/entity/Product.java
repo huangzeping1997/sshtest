@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Table
-@Entity(name = "t_product")
+@Entity
+@Table(name = "t_product")
 public class Product {
 
     private int id;

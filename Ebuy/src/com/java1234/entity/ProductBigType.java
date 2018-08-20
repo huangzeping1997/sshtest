@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table
-@Entity(name = "t_productBigType")
+@Entity
+@Table(name = "t_productbigtype")
 public class ProductBigType {
 
     private int id;

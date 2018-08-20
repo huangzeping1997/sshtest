@@ -9,7 +9,7 @@
         <module name="Ebuy" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="Ebuy" target="1.7" />
     </bytecodeTargetLevel>
   </component>

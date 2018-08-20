@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Table
-@Entity(name = "t_order")
+@Entity
+@Table(name = "t_order")
 public class Order {
 
     private int id;
